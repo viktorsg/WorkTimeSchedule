@@ -25,7 +25,6 @@ public class SQLite extends SQLiteOpenHelper {
     private static final String COLUMN_EMPLOYEE_LAST_ACTIVE = "employeeLastActive";
 
 
-
     public SQLite(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
