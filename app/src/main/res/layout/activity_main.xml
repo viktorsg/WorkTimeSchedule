@@ -3,6 +3,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.worktimeschedule.MainActivity">
+    tools:context="com.worktimeschedule.MainActivity"
+    android:background="@mipmap/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25">
+
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/button"
+                android:text="@string/registerEmployee"
+                android:textColor="@android:color/white"
+                android:id="@+id/register_Employee"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25">
+
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/button"
+                android:text="@string/addWorkCard"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25">
+
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/button"
+                android:text="@string/addWorkTask"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25">
+
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/button"
+                android:text="@string/references"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/frameLayout"/>
 
 </RelativeLayout>

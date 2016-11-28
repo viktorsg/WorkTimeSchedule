@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/username"
+                android:textSize="20sp"
+                android:id="@+id/usernameTextView"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/usernameTextView"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text"
+                android:id="@+id/usernameEditText"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/password"
+                android:textSize="20sp"
+                android:id="@+id/passwordTextView"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="@+id/passwordTextView"
+                android:background="@drawable/edit_text_background"
+                android:inputType="textPassword"
+                android:id="@+id/passwordEditText"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/firstName"
+                android:textSize="20sp"
+                android:id="@+id/firstNameTextView"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="@+id/firstNameTextView"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text"
+                android:id="@+id/firstNameEditText"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/lastName"
+                android:textSize="20sp"
+                android:id="@+id/lastNameTextView"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="@+id/lastNameTextView"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text"
+                android:id="@+id/lastNameEditText"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/jobTitle"
+                android:textSize="20sp"
+                android:id="@+id/jobTitleTextView"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="@+id/jobTitleTextView"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text"
+                android:id="@+id/jobTitleEditText"/>
+
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@mipmap/button"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:text="@string/add"
+            android:id="@+id/addEmployeeButton"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
