@@ -17,7 +17,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         initUI();
         initUIListeners();
-
     }
 
     private void initUI() {

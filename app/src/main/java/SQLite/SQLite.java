@@ -2,6 +2,7 @@ package SQLite;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -35,13 +36,12 @@ public class SQLite extends SQLiteOpenHelper {
     private static final String COLUMN_CARD_DESCRIPTION = "cardDescription";
 
     /*******************Work Tasks*******************/
-    private static final String WORK_TASKS_TABLE = "tasksCards";
+    private static final String WORK_TASKS_TABLE = "tasks";
     private static final String COLUMN_TASK_ID = "taskId";
     private static final String COLUMN_TASK_DESCRIPTION = "taskDescription";
     private static final String COLUMN_TASK_START_TIME = "taskStartTime";
     private static final String COLUMN_TASK_END_TIME = "taskEndTime";
     private static final String COLUMN_TASK_MANAGER = "manager";
-    private static final String COLUMN_TASK_EMPLOYEES = "taskEmployees";
     private static final String COLUMN_TASK_TOTAL_WORK_HOURS = "totalWorkHours";
     private static final String COLUMN_TASK_CURRENT_WORK_HOURS = "currentWorkHours";
     private static final String COLUMN_TASK_STATE = "state";
@@ -49,7 +49,7 @@ public class SQLite extends SQLiteOpenHelper {
     /*******************Task Executors*******************/
     private static final String TASK_EXECUTORS_TABLE = "taskExecutors";
     private static final String COLUMN_EXECUTOR_TASK_ID = "executorTaskId";
-    private static final String COLUMN_EXECUTOR__ID = "executorId";
+    private static final String COLUMN_EXECUTOR_ID = "executorId";
 
     public SQLite(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -67,19 +67,38 @@ public class SQLite extends SQLiteOpenHelper {
                 + WORK_TASKS_TABLE + "(" + COLUMN_TASK_ID + "))");
 
         db.execSQL("CREATE TABLE " + WORK_TASKS_TABLE + " (" + COLUMN_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_TASK_DESCRIPTION + " TEXT, "
-                + COLUMN_TASK_START_TIME + " DATETIME, " + COLUMN_TASK_END_TIME + " DATETIME, " + COLUMN_TASK_MANAGER + " INTEGER, " + COLUMN_TASK_EMPLOYEES + " INTEGER AUTOINCREMENT, "
+                + COLUMN_TASK_START_TIME + " DATETIME, " + COLUMN_TASK_END_TIME + " DATETIME, " + COLUMN_TASK_MANAGER + " INTEGER, "
                 + COLUMN_TASK_TOTAL_WORK_HOURS + " INTEGER, " + COLUMN_TASK_CURRENT_WORK_HOURS + " INTEGER, " + COLUMN_TASK_STATE + " TEXT, FOREIGN KEY("
-                + COLUMN_TASK_MANAGER + ") REFERENCES " + EMPLOYEES_TABLE + "(" + COLUMN_EMPLOYEE_ID + "), FOREIGN KEY(" + COLUMN_TASK_EMPLOYEES + ") REFERENCES "
-                + TASK_EXECUTORS_TABLE + "(" + COLUMN_EXECUTOR_TASK_ID + "))");
+                + COLUMN_TASK_MANAGER + ") REFERENCES " + EMPLOYEES_TABLE + "(" + COLUMN_EMPLOYEE_ID + "))");
 
-        db.execSQL("CREATE TABLE " + TASK_EXECUTORS_TABLE + " (" + COLUMN_EXECUTOR_TASK_ID + " INTEGER, " + COLUMN_EXECUTOR__ID + "INTEGER)");
+        db.execSQL("CREATE TABLE " + TASK_EXECUTORS_TABLE + " (" + COLUMN_EXECUTOR_TASK_ID + " INTEGER, " + COLUMN_EXECUTOR_ID + " INTEGER, FOREIGN KEY (" + COLUMN_EXECUTOR_TASK_ID
+                + ") REFERENCES " + WORK_TASKS_TABLE + "(" + COLUMN_TASK_ID + "), FOREIGN KEY (" + COLUMN_EXECUTOR_ID + ") REFERENCES " + EMPLOYEES_TABLE + "("
+                + COLUMN_EMPLOYEE_ID + "))");
+
+        db.execSQL("INSERT INTO " + EMPLOYEES_TABLE + " (" + COLUMN_EMPLOYEE_USERNAME + ", " + COLUMN_EMPLOYEE_PASSWORD
+                + ", " + COLUMN_EMPLOYEE_FIRST_NAME + ", " + COLUMN_EMPLOYEE_LAST_NAME + ", " + COLUMN_EMPLOYEE_JOB_TITLE + ", "
+                + COLUMN_EMPLOYEE_LAST_ACTIVE + ") VALUES ('admin', 'admin', 'Viktor', 'Georgiev', 'Manager', null)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + EMPLOYEES_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + WORK_CARDS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + WORK_TASKS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TASK_EXECUTORS_TABLE);
         onCreate(db);
+    }
+
+    public boolean checkUser(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + EMPLOYEES_TABLE + " WHERE " + COLUMN_EMPLOYEE_USERNAME + " = ? AND " + COLUMN_EMPLOYEE_PASSWORD + " = ?", new String[]{username, password});
+        if(cursor.getCount() == 1) {
+            cursor.close();
+            return true;
+        }
+
+        cursor.close();
+        return false;
     }
 
     public boolean addEmployee(Employee employee) {
