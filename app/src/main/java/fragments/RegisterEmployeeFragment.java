@@ -14,7 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.worktimeschedule.R;
+import activities.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,13 +53,13 @@ public class RegisterEmployeeFragment extends Fragment implements View.OnClickLi
     }
 
     private void initUI(View view) {
-        mUsernameEditText = (EditText) view.findViewById(R.id.usernameEditText);
-        mPasswordEditText = (EditText) view.findViewById(R.id.passwordEditText);
-        mFirstNameEditText = (EditText) view.findViewById(R.id.firstNameEditText);
-        mLastNameEditText = (EditText) view.findViewById(R.id.lastNameEditText);
-        mJobTitleEditText = (EditText) view.findViewById(R.id.jobTitleEditText);
+        mUsernameEditText = (EditText) view.findViewById(R.id.username_Edit_Text);
+        mPasswordEditText = (EditText) view.findViewById(R.id.password_Edit_Text);
+        mFirstNameEditText = (EditText) view.findViewById(R.id.first_Name_Edit_Text);
+        mLastNameEditText = (EditText) view.findViewById(R.id.last_Name_Edit_Text);
+        mJobTitleEditText = (EditText) view.findViewById(R.id.job_Title_Edit_Text);
 
-        mAddEmployeeButton = (Button) view.findViewById(R.id.addEmployeeButton);
+        mAddEmployeeButton = (Button) view.findViewById(R.id.add_Employee_Button);
     }
 
     private void initUIListeners() {
@@ -69,7 +69,7 @@ public class RegisterEmployeeFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.addEmployeeButton:
+            case R.id.add_Employee_Button:
                 View focus = getActivity().getCurrentFocus();
                 if (focus != null) {
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -127,7 +127,7 @@ public class RegisterEmployeeFragment extends Fragment implements View.OnClickLi
                 } else {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setTitle("Work Schedule")
-                                      .setMessage(TextUtils.join(", ", errors) + " could not be empty!")
+                                      .setMessage(TextUtils.join(", ", errors) + " can not be empty!")
                                       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                           @Override
                                           public void onClick(DialogInterface dialogInterface, int i) {

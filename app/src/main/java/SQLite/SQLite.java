@@ -6,7 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+
 import classes.Employee;
+import classes.Task;
 import classes.WorkCard;
 
 
@@ -38,11 +43,12 @@ public class SQLite extends SQLiteOpenHelper {
     /*******************Work Tasks*******************/
     private static final String WORK_TASKS_TABLE = "tasks";
     private static final String COLUMN_TASK_ID = "taskId";
+    private static final String COLUMN_TASK_NAME = "taskName";
     private static final String COLUMN_TASK_DESCRIPTION = "taskDescription";
-    private static final String COLUMN_TASK_START_TIME = "taskStartTime";
-    private static final String COLUMN_TASK_END_TIME = "taskEndTime";
-    private static final String COLUMN_TASK_MANAGER = "manager";
-    private static final String COLUMN_TASK_TOTAL_WORK_HOURS = "totalWorkHours";
+    private static final String COLUMN_TASK_START_DATE = "taskStartTime";
+    private static final String COLUMN_TASK_END_DATE = "taskEndTime";
+    private static final String COLUMN_TASK_LEADER_ID = "leaderId";
+    private static final String COLUMN_TASK_PROVIDED_HOURS = "totalWorkHours";
     private static final String COLUMN_TASK_CURRENT_WORK_HOURS = "currentWorkHours";
     private static final String COLUMN_TASK_STATE = "state";
 
@@ -61,15 +67,15 @@ public class SQLite extends SQLiteOpenHelper {
                 + COLUMN_EMPLOYEE_PASSWORD + " TEXT, " + COLUMN_EMPLOYEE_FIRST_NAME + " TEXT, " + COLUMN_EMPLOYEE_LAST_NAME + " TEXT, " + COLUMN_EMPLOYEE_JOB_TITLE + " TEXT, " +
                 COLUMN_EMPLOYEE_LAST_ACTIVE + " TEXT)");
 
-        db.execSQL("CREATE TABLE " + WORK_CARDS_TABLE + " (" + COLUMN_CARD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_CARD_START_TIME + " DATETIME, "
-                + COLUMN_CARD_END_TIME + " DATETIME, " + COLUMN_CARD_EMPLOYEE_ID + " INTEGER, " + COLUMN_CARD_TASK_ID + " INTEGER, " + COLUMN_CARD_DESCRIPTION + " TEXT, FOREIGN KEY("
+        db.execSQL("CREATE TABLE " + WORK_CARDS_TABLE + " (" + COLUMN_CARD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_CARD_START_TIME + " TEXT, "
+                + COLUMN_CARD_END_TIME + " TEXT, " + COLUMN_CARD_EMPLOYEE_ID + " INTEGER, " + COLUMN_CARD_TASK_ID + " INTEGER, " + COLUMN_CARD_DESCRIPTION + " TEXT, FOREIGN KEY("
                 + COLUMN_CARD_EMPLOYEE_ID + ") REFERENCES " + EMPLOYEES_TABLE + "(" + COLUMN_EMPLOYEE_ID + "), FOREIGN KEY("+ COLUMN_CARD_TASK_ID + ") REFERENCES "
                 + WORK_TASKS_TABLE + "(" + COLUMN_TASK_ID + "))");
 
-        db.execSQL("CREATE TABLE " + WORK_TASKS_TABLE + " (" + COLUMN_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_TASK_DESCRIPTION + " TEXT, "
-                + COLUMN_TASK_START_TIME + " DATETIME, " + COLUMN_TASK_END_TIME + " DATETIME, " + COLUMN_TASK_MANAGER + " INTEGER, "
-                + COLUMN_TASK_TOTAL_WORK_HOURS + " INTEGER, " + COLUMN_TASK_CURRENT_WORK_HOURS + " INTEGER, " + COLUMN_TASK_STATE + " TEXT, FOREIGN KEY("
-                + COLUMN_TASK_MANAGER + ") REFERENCES " + EMPLOYEES_TABLE + "(" + COLUMN_EMPLOYEE_ID + "))");
+        db.execSQL("CREATE TABLE " + WORK_TASKS_TABLE + " (" + COLUMN_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COLUMN_TASK_NAME + " TEXT, " + COLUMN_TASK_DESCRIPTION + " TEXT, "
+                + COLUMN_TASK_START_DATE + " TEXT, " + COLUMN_TASK_END_DATE + " TEXT, " + COLUMN_TASK_LEADER_ID + " INTEGER, "
+                + COLUMN_TASK_PROVIDED_HOURS + " INTEGER, " + COLUMN_TASK_CURRENT_WORK_HOURS + " INTEGER, " + COLUMN_TASK_STATE + " TEXT, FOREIGN KEY("
+                + COLUMN_TASK_LEADER_ID + ") REFERENCES " + EMPLOYEES_TABLE + "(" + COLUMN_EMPLOYEE_ID + "))");
 
         db.execSQL("CREATE TABLE " + TASK_EXECUTORS_TABLE + " (" + COLUMN_EXECUTOR_TASK_ID + " INTEGER, " + COLUMN_EXECUTOR_ID + " INTEGER, FOREIGN KEY (" + COLUMN_EXECUTOR_TASK_ID
                 + ") REFERENCES " + WORK_TASKS_TABLE + "(" + COLUMN_TASK_ID + "), FOREIGN KEY (" + COLUMN_EXECUTOR_ID + ") REFERENCES " + EMPLOYEES_TABLE + "("
@@ -77,7 +83,7 @@ public class SQLite extends SQLiteOpenHelper {
 
         db.execSQL("INSERT INTO " + EMPLOYEES_TABLE + " (" + COLUMN_EMPLOYEE_USERNAME + ", " + COLUMN_EMPLOYEE_PASSWORD
                 + ", " + COLUMN_EMPLOYEE_FIRST_NAME + ", " + COLUMN_EMPLOYEE_LAST_NAME + ", " + COLUMN_EMPLOYEE_JOB_TITLE + ", "
-                + COLUMN_EMPLOYEE_LAST_ACTIVE + ") VALUES ('admin', 'admin', 'Viktor', 'Georgiev', 'Manager', null)");
+                + COLUMN_EMPLOYEE_LAST_ACTIVE + ") VALUES ('admin', 'admin', 'Viktor', 'Georgiev', 'Administrator', null)");
     }
 
     @Override
@@ -89,16 +95,21 @@ public class SQLite extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean checkUser(String username, String password) {
+    public int checkUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + EMPLOYEES_TABLE + " WHERE " + COLUMN_EMPLOYEE_USERNAME + " = ? AND " + COLUMN_EMPLOYEE_PASSWORD + " = ?", new String[]{username, password});
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_EMPLOYEE_ID + " FROM " + EMPLOYEES_TABLE + " WHERE " + COLUMN_EMPLOYEE_USERNAME + " = ? AND "
+                + COLUMN_EMPLOYEE_PASSWORD + " = ?", new String[]{username, password});
+        cursor.moveToFirst();
         if(cursor.getCount() == 1) {
+            int userId = cursor.getInt(0);
             cursor.close();
-            return true;
+            db.close();
+            return userId;
         }
 
         cursor.close();
-        return false;
+        db.close();
+        return -1;
     }
 
     public boolean addEmployee(Employee employee) {
@@ -113,6 +124,73 @@ public class SQLite extends SQLiteOpenHelper {
         contentValues.put(COLUMN_EMPLOYEE_LAST_ACTIVE, employee.getLastActive());
 
         long row = db.insert(EMPLOYEES_TABLE, null, contentValues);
+        return row != -1;
+    }
+
+    public Employee getEmployee(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + EMPLOYEES_TABLE + " WHERE " + COLUMN_EMPLOYEE_ID + " = ?", new String[]{String.valueOf(userId)});
+        cursor.moveToFirst();
+
+        Employee employee = new Employee();
+        employee.setID(cursor.getInt(cursor.getColumnIndex(COLUMN_EMPLOYEE_ID)));
+        employee.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_USERNAME)));
+        employee.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_PASSWORD)));
+        employee.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_FIRST_NAME)));
+        employee.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_LAST_NAME)));
+        employee.setJobTitle(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_JOB_TITLE)));
+        employee.setLastActive(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_LAST_ACTIVE)));
+
+        cursor.close();
+        db.close();
+
+        return employee;
+    }
+
+    public List<Employee> getAllEmployees() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Employee> employeeList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + EMPLOYEES_TABLE, null);
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()){
+            String jobTitle = cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_JOB_TITLE));
+            if(!jobTitle.equalsIgnoreCase("Administrator")) {
+                Employee employee = new Employee();
+
+                employee.setID(cursor.getInt(cursor.getColumnIndex(COLUMN_EMPLOYEE_ID)));
+                employee.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_USERNAME)));
+                employee.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_PASSWORD)));
+                employee.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_FIRST_NAME)));
+                employee.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_LAST_NAME)));
+                employee.setJobTitle(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_JOB_TITLE)));
+                employee.setLastActive(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_LAST_ACTIVE)));
+
+                employeeList.add(employee);
+            }
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        db.close();
+
+        return employeeList;
+    }
+
+    public boolean addTask(Task task) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_TASK_NAME, task.getName());
+        contentValues.put(COLUMN_TASK_DESCRIPTION, task.getDescription());
+        contentValues.put(COLUMN_TASK_START_DATE, task.getStartDate());
+        contentValues.put(COLUMN_TASK_END_DATE, task.getEndDate());
+        contentValues.put(COLUMN_TASK_LEADER_ID, task.getLeaderId());
+        contentValues.put(COLUMN_TASK_PROVIDED_HOURS, task.getProvidedHours());
+        contentValues.put(COLUMN_TASK_STATE, task.getState());
+
+        long row = db.insert(WORK_TASKS_TABLE, null, contentValues);
         return row != -1;
     }
 

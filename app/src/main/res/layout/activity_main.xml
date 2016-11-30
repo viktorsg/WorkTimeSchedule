@@ -3,12 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.worktimeschedule.MainActivity"
+    tools:context=".MainActivity"
     android:background="@mipmap/bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/colorPrimary"
+        android:id="@+id/headerRelativeLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="@string/app_name"
+            android:textSize="25sp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black"
+        android:layout_marginTop="65dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/headerRelativeLayout"
+        android:layout_marginTop="2dp"
         android:paddingTop="50dp"
         android:paddingBottom="50dp"
         android:orientation="vertical">
@@ -16,7 +41,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.25">
+            android:layout_weight="0.25"
+            android:id="@+id/register_Relative_Layout">
 
             <Button
                 android:layout_width="160dp"
@@ -32,7 +58,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.25">
+            android:layout_weight="0.25"
+            android:id="@+id/work_Card_Relative_Layout">
 
             <Button
                 android:layout_width="160dp"
@@ -40,14 +67,16 @@
                 android:layout_centerInParent="true"
                 android:background="@mipmap/button"
                 android:text="@string/addWorkCard"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:id="@+id/add_workCard_Button"/>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.25">
+            android:layout_weight="0.25"
+            android:id="@+id/task_Relative_Layout">
 
             <Button
                 android:layout_width="160dp"
@@ -55,14 +84,16 @@
                 android:layout_centerInParent="true"
                 android:background="@mipmap/button"
                 android:text="@string/addWorkTask"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:id="@+id/add_Task_Button"/>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.25">
+            android:layout_weight="0.25"
+            android:id="@+id/references_Relative_Layout">
 
             <Button
                 android:layout_width="160dp"
@@ -73,11 +104,14 @@
                 android:textColor="@android:color/white"/>
 
         </RelativeLayout>
+
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/headerRelativeLayout"
+        android:layout_marginTop="2dp"
         android:id="@+id/frameLayout"/>
 
 </RelativeLayout>
