@@ -39,6 +39,7 @@ public class SQLite extends SQLiteOpenHelper {
     private static final String COLUMN_CARD_ID = "cardId";
     private static final String COLUMN_CARD_START_TIME = "cardStartTime";
     private static final String COLUMN_CARD_END_TIME = "cardEndTime";
+    private static final String COLUMN_CARD_HOURS_WORKED = "cardHoursWorked";
     private static final String COLUMN_CARD_TASK_ID = "cardTaskId";
     private static final String COLUMN_CARD_EMPLOYEE_ID = "cardEmployeeId";
     private static final String COLUMN_CARD_DESCRIPTION = "cardDescription";
@@ -71,9 +72,9 @@ public class SQLite extends SQLiteOpenHelper {
                 COLUMN_EMPLOYEE_LAST_ACTIVE + " TEXT)");
 
         db.execSQL("CREATE TABLE " + WORK_CARDS_TABLE + " (" + COLUMN_CARD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_CARD_START_TIME + " TEXT, "
-                + COLUMN_CARD_END_TIME + " TEXT, " + COLUMN_CARD_EMPLOYEE_ID + " INTEGER, " + COLUMN_CARD_TASK_ID + " INTEGER, " + COLUMN_CARD_DESCRIPTION + " TEXT, FOREIGN KEY("
-                + COLUMN_CARD_EMPLOYEE_ID + ") REFERENCES " + EMPLOYEES_TABLE + "(" + COLUMN_EMPLOYEE_ID + "), FOREIGN KEY("+ COLUMN_CARD_TASK_ID + ") REFERENCES "
-                + WORK_TASKS_TABLE + "(" + COLUMN_TASK_ID + "))");
+                + COLUMN_CARD_END_TIME + " TEXT, " + COLUMN_CARD_HOURS_WORKED + " INTEGER, " + COLUMN_CARD_EMPLOYEE_ID + " INTEGER, " + COLUMN_CARD_TASK_ID + " INTEGER, "
+                + COLUMN_CARD_DESCRIPTION + " TEXT, FOREIGN KEY(" + COLUMN_CARD_EMPLOYEE_ID + ") REFERENCES " + EMPLOYEES_TABLE + "("
+                + COLUMN_EMPLOYEE_ID + "), FOREIGN KEY("+ COLUMN_CARD_TASK_ID + ") REFERENCES " + WORK_TASKS_TABLE + "(" + COLUMN_TASK_ID + "))");
 
         db.execSQL("CREATE TABLE " + WORK_TASKS_TABLE + " (" + COLUMN_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COLUMN_TASK_NAME + " TEXT, " + COLUMN_TASK_DESCRIPTION + " TEXT, "
                 + COLUMN_TASK_START_DATE + " TEXT, " + COLUMN_TASK_END_DATE + " TEXT, " + COLUMN_TASK_LEADER_ID + " INTEGER, "
@@ -150,6 +151,34 @@ public class SQLite extends SQLiteOpenHelper {
         return employee;
     }
 
+    public List<Employee> getEmployeesByTask(int taskId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Employee> employeeList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_EMPLOYEE_FIRST_NAME + ", " + COLUMN_EMPLOYEE_LAST_NAME + ", SUM("
+                + COLUMN_CARD_HOURS_WORKED + ") AS 'SUM " + COLUMN_CARD_HOURS_WORKED + "' FROM " + EMPLOYEES_TABLE + " JOIN " + WORK_CARDS_TABLE
+                + " ON " +  WORK_CARDS_TABLE + "." + COLUMN_CARD_EMPLOYEE_ID + " = "
+                + EMPLOYEES_TABLE + "." + COLUMN_EMPLOYEE_ID + " WHERE " + COLUMN_CARD_TASK_ID + " = ? GROUP BY "
+                + COLUMN_EMPLOYEE_FIRST_NAME + ", " + COLUMN_EMPLOYEE_LAST_NAME, new String[]{String.valueOf(taskId)});
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()) {
+            Employee employee = new Employee();
+
+            employee.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_FIRST_NAME)));
+            employee.setLastName(cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_LAST_NAME)));
+            employee.setTaskHours(cursor.getInt(cursor.getColumnIndex("SUM " + COLUMN_CARD_HOURS_WORKED)));
+
+            employeeList.add(employee);
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        db.close();
+
+        return employeeList;
+    }
+
     public List<Employee> getAllEmployees() {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Employee> employeeList = new ArrayList<>();
@@ -157,7 +186,6 @@ public class SQLite extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()){
-            String jobTitle = cursor.getString(cursor.getColumnIndex(COLUMN_EMPLOYEE_JOB_TITLE));
             Employee employee = new Employee();
 
             employee.setID(cursor.getInt(cursor.getColumnIndex(COLUMN_EMPLOYEE_ID)));
@@ -233,6 +261,19 @@ public class SQLite extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_CARD_START_TIME, workCard.getStartTime());
         contentValues.put(COLUMN_CARD_END_TIME, workCard.getEndTime());
+        SimpleDateFormat format = new SimpleDateFormat("HH-mm d-MM-yyyy", Locale.getDefault());
+        Date beginDate = null;
+        Date endDate = null;
+        long hours = 0;
+        try {
+            beginDate = format.parse(workCard.getStartTime());
+            endDate = format.parse(workCard.getEndTime());
+            long mills = endDate.getTime() - beginDate.getTime();
+            hours = mills / (1000 * 60 * 60);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        contentValues.put(COLUMN_CARD_HOURS_WORKED, hours);
         contentValues.put(COLUMN_CARD_TASK_ID, workCard.getTaskId());
         contentValues.put(COLUMN_CARD_EMPLOYEE_ID, workCard.getEmployeeId());
         contentValues.put(COLUMN_CARD_DESCRIPTION, workCard.getDescription());
@@ -248,30 +289,19 @@ public class SQLite extends SQLiteOpenHelper {
             int providedHours = cursor.getInt(cursor.getColumnIndex(COLUMN_TASK_PROVIDED_WORK_HOURS));
             int currentHours = cursor.getInt(cursor.getColumnIndex(COLUMN_TASK_CURRENT_WORK_HOURS));
 
-            try {
-                SimpleDateFormat format = new SimpleDateFormat("HH-mm d-MM-yyyy", Locale.getDefault());
-                Date beginDate = format.parse(workCard.getStartTime());
-                Date endDate = format.parse(workCard.getEndTime());
-
-                long mills = endDate.getTime() - beginDate.getTime();
-                long hours = mills / (1000 * 60 * 60);
-
-                if(currentHours == 0 && hours > 0) {
-                    db.execSQL("UPDATE " + WORK_TASKS_TABLE + " SET " + COLUMN_TASK_STATE + " = " + Task.STARTED + " WHERE " + COLUMN_TASK_ID
-                            + " = ?", new String[]{String.valueOf(workCard.getTaskId())});
-                }
-
-                currentHours += hours;
-                if(currentHours >= providedHours) {
-                    db.execSQL("UPDATE " + WORK_TASKS_TABLE + " SET " + COLUMN_TASK_STATE + " = " + Task.COMPLETED + " WHERE " + COLUMN_TASK_ID
-                            + " = ?", new String[]{String.valueOf(workCard.getTaskId())});
-                }
-
-                db.execSQL("UPDATE " + WORK_TASKS_TABLE + " SET " + COLUMN_TASK_CURRENT_WORK_HOURS + " = " + currentHours + " WHERE " + COLUMN_TASK_ID
+            if(currentHours == 0 && hours > 0) {
+                db.execSQL("UPDATE " + WORK_TASKS_TABLE + " SET " + COLUMN_TASK_STATE + " = " + Task.STARTED + " WHERE " + COLUMN_TASK_ID
                         + " = ?", new String[]{String.valueOf(workCard.getTaskId())});
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
+
+            currentHours += hours;
+            if(currentHours >= providedHours) {
+                db.execSQL("UPDATE " + WORK_TASKS_TABLE + " SET " + COLUMN_TASK_STATE + " = " + Task.COMPLETED + " WHERE " + COLUMN_TASK_ID
+                        + " = ?", new String[]{String.valueOf(workCard.getTaskId())});
+            }
+
+            db.execSQL("UPDATE " + WORK_TASKS_TABLE + " SET " + COLUMN_TASK_CURRENT_WORK_HOURS + " = " + currentHours + " WHERE " + COLUMN_TASK_ID
+                    + " = ?", new String[]{String.valueOf(workCard.getTaskId())});
 
             cursor = db.rawQuery("SELECT * FROM " + TASK_EXECUTORS_TABLE + " WHERE " + COLUMN_EXECUTOR_TASK_ID + "= ? AND "
                                  + COLUMN_EXECUTOR_ID + " = ?", new String[]{String.valueOf(workCard.getTaskId()), String.valueOf(workCard.getEmployeeId())});

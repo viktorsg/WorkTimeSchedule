@@ -12,6 +12,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import SQLite.SQLite;
+import activities.MainActivity;
 import activities.R;
 import adapters.ReferenceAdapter;
 import classes.Employee;
@@ -69,7 +70,17 @@ public class ReferencesListFragment extends Fragment implements AdapterView.OnIt
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        if(mTaskList != null) {
+            Task task = mTaskList.get(position);
+            TasksReferenceFragment tasksReferenceFragment = new TasksReferenceFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("task", task.getId());
+            tasksReferenceFragment.setArguments(bundle);
+            getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                    .add(R.id.frameLayout, tasksReferenceFragment).addToBackStack(null).commit();
+        } else if (mEmployeeList != null) {
+            Employee employee = mEmployeeList.get(position);
+        }
     }
 }

@@ -9,6 +9,7 @@ public class Employee {
     private String lastName;
     private String jobTitle;
     private String lastActive;
+    private int taskHours;
 
     public int getID() {
         return ID;
@@ -64,5 +65,13 @@ public class Employee {
 
     public void setLastActive(String lastActive) {
         this.lastActive = lastActive;
+    }
+
+    public int getTaskHours() {
+        return taskHours;
+    }
+
+    public void setTaskHours(int taskHours) {
+        this.taskHours = taskHours;
     }
 }
