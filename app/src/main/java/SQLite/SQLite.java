@@ -223,6 +223,33 @@ public class SQLite extends SQLiteOpenHelper {
         return row != -1;
     }
 
+    public List<Task> getTasksByEmployee(int employeeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Task> tasksList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_TASK_NAME + ", SUM("
+                + COLUMN_CARD_HOURS_WORKED + ") AS 'SUM " + COLUMN_CARD_HOURS_WORKED + "' FROM " + WORK_TASKS_TABLE + " JOIN " + WORK_CARDS_TABLE
+                + " ON " +  WORK_CARDS_TABLE + "." + COLUMN_CARD_TASK_ID + " = "
+                + WORK_TASKS_TABLE + "." + COLUMN_TASK_ID + " WHERE " + COLUMN_CARD_EMPLOYEE_ID + " = ? GROUP BY "
+                + COLUMN_TASK_NAME, new String[]{String.valueOf(employeeId)});
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()) {
+            Task task = new Task();
+
+            task.setName(cursor.getString(cursor.getColumnIndex(COLUMN_TASK_NAME)));
+            task.setHoursWorked(cursor.getInt(cursor.getColumnIndex("SUM " + COLUMN_CARD_HOURS_WORKED)));
+
+            tasksList.add(task);
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        db.close();
+
+        return tasksList;
+    }
+
     public List<Task> getAllTasks() {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Task> tasksList = new ArrayList<>();

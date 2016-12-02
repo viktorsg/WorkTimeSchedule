@@ -18,6 +18,7 @@ public class Task {
     private List<Employee> taskEmployees;
     private int providedHours;
     private int currentHours;
+    private int hoursWorked;
     private int state;
 
     public int getId() {
@@ -98,5 +99,13 @@ public class Task {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public int getHoursWorked() {
+        return hoursWorked;
+    }
+
+    public void setHoursWorked(int hoursWorked) {
+        this.hoursWorked = hoursWorked;
     }
 }

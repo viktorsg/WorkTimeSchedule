@@ -81,6 +81,12 @@ public class ReferencesListFragment extends Fragment implements AdapterView.OnIt
                     .add(R.id.frameLayout, tasksReferenceFragment).addToBackStack(null).commit();
         } else if (mEmployeeList != null) {
             Employee employee = mEmployeeList.get(position);
+            EmployeeReferenceFragment employeeReferenceFragment = new EmployeeReferenceFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("employee", employee.getID());
+            employeeReferenceFragment.setArguments(bundle);
+            getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                    .add(R.id.frameLayout, employeeReferenceFragment).addToBackStack(null).commit();
         }
     }
 }
