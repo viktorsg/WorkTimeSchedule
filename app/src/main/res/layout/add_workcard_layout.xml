@@ -3,20 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:clickable="true"
     android:background="@mipmap/bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp">
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -24,13 +26,13 @@
                 android:gravity="center"
                 android:text="@string/startDate"
                 android:textSize="20sp"
-                android:id="@+id/startTime"/>
+                android:id="@+id/startDate"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/startTime"
+                android:layout_below="@+id/startDate"
                 android:gravity="center"
                 android:background="@drawable/edit_text_background"
                 android:id="@+id/start_Date_Text_View"/>
@@ -41,8 +43,8 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp">
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -50,13 +52,13 @@
                 android:gravity="center"
                 android:text="@string/endDate"
                 android:textSize="20sp"
-                android:id="@+id/endTime"/>
+                android:id="@+id/endDate"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@+id/endTime"
+                android:layout_below="@+id/endDate"
                 android:gravity="center"
                 android:background="@drawable/edit_text_background"
                 android:id="@+id/end_Date_Text_View"/>
@@ -64,5 +66,140 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="@string/startTime"
+                android:textSize="20sp"
+                android:id="@+id/startTime"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/startTime"
+                android:gravity="center"
+                android:background="@drawable/edit_text_background"
+                android:id="@+id/start_Time_Text_View"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="@string/endTime"
+                android:textSize="20sp"
+                android:id="@+id/endTime"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/endTime"
+                android:gravity="center"
+                android:background="@drawable/edit_text_background"
+                android:id="@+id/end_Time_Text_View"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="0.4"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="@string/task"
+                android:textSize="20sp"
+                android:id="@+id/task"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/task"
+                android:gravity="center"
+                android:background="@drawable/edit_text_background"
+                android:id="@+id/task_Text_View"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="0.6"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="@string/taskDescription"
+                android:textSize="20sp"
+                android:id="@+id/description"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/description"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text"
+                android:textSize="15sp"
+                android:id="@+id/description_Edit_Text"
+                android:labelFor="@+id/description_Edit_Text"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@mipmap/button"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:text="@string/addWorkCard"
+        android:id="@+id/add_card_Button"/>
 
 </LinearLayout>

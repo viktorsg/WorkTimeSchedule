@@ -2,19 +2,19 @@ package classes;
 
 public class WorkCard {
 
-    private int cardId;
+    private int ID;
     private String startTime;
     private String endTime;
-    private int cardTaskId;
-    private int cardEmployeeId;
-    private String cardDescription;
+    private int taskId;
+    private int employeeId;
+    private String description;
 
-    public int getCardId() {
-        return cardId;
+    public int getId() {
+        return ID;
     }
 
-    public void setCardId(int cardId) {
-        this.cardId = cardId;
+    public void setId(int id) {
+        this.ID = id;
     }
 
     public String getStartTime() {
@@ -33,27 +33,27 @@ public class WorkCard {
         this.endTime = endTime;
     }
 
-    public int getCardTaskId() {
-        return cardTaskId;
+    public int getTaskId() {
+        return taskId;
     }
 
-    public void setCardTaskId(int cardTaskId) {
-        this.cardTaskId = cardTaskId;
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 
-    public int getCardEmployeeId() {
-        return cardEmployeeId;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setCardEmployeeId(int cardEmployeeId) {
-        this.cardEmployeeId = cardEmployeeId;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public String getCardDescription() {
-        return cardDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCardDescription(String cardDescription) {
-        this.cardDescription = cardDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

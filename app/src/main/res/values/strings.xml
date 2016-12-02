@@ -2,8 +2,8 @@
     <string name="app_name">WorkTimeSchedule</string>
 
     <string name="registerEmployee">Register Employee</string>
-    <string name="addWorkCard">Add Workcard</string>
-    <string name="addWorkTask">Add Worktask</string>
+    <string name="addWorkCard">Add WorkCard</string>
+    <string name="addWorkTask">Add WorkTask</string>
     <string name="references">References</string>
 
     <string name="username">Username:</string>
@@ -20,5 +20,13 @@
     <string name="endDate">End Date</string>
     <string name="leader">Leader</string>
     <string name="addTask">Add Task</string>
+
+    <string name="startTime">Start Time</string>
+    <string name="endTime">End Time</string>
+    <string name="task">Task</string>
+    <string name="taskDescription">Description</string>
+
+    <string name="referenceByTask">Reference By Task</string>
+    <string name="referenceByEmployee">Reference By Employee</string>
 
 </resources>

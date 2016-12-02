@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("userId", userId);
                     startActivity(intent);
+                    finish();
                 } else {
                     mWrongLoginTextView.setVisibility(View.VISIBLE);
                     mUsernameEditText.setText("");

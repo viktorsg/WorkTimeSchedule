@@ -11,6 +11,7 @@ import activities.R;
 import classes.Employee;
 import fragments.AddTaskFragment;
 import fragments.AddWorkCardFragment;
+import fragments.ReferencesFragment;
 import fragments.RegisterEmployeeFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
@@ -25,8 +26,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private Button mRegisterEmployeeButton;
     private Button mAddTaskButton;
     private Button mAddWorkCardButton;
+    private Button mReferencesButton;
 
-    private Employee mEmployee;
+    public Employee mEmployee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +57,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mRegisterEmployeeButton = (Button) findViewById(R.id.register_Employee);
         mAddTaskButton = (Button) findViewById(R.id.add_Task_Button);
         mAddWorkCardButton = (Button) findViewById(R.id.add_workCard_Button);
+        mReferencesButton = (Button) findViewById(R.id.references_Button);
     }
 
     private void initUIListeners() {
         mRegisterEmployeeButton.setOnClickListener(this);
         mAddTaskButton.setOnClickListener(this);
         mAddWorkCardButton.setOnClickListener(this);
+        mReferencesButton.setOnClickListener(this);
     }
 
     @Override
@@ -79,6 +83,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.add_workCard_Button:
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
                         .add(R.id.frameLayout, new AddWorkCardFragment()).addToBackStack(null).commit();
+                break;
+
+            case R.id.references_Button:
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .add(R.id.frameLayout, new ReferencesFragment()).addToBackStack(null).commit();
                 break;
         }
     }

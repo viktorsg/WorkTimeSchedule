@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@mipmap/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/headerRelativeLayout"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/register_Relative_Layout">
+
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/button"
+                android:text="@string/referenceByTask"
+                android:textColor="@android:color/white"
+                android:id="@+id/reference_By_Task_Button"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/work_Card_Relative_Layout">
+
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/button"
+                android:text="@string/referenceByEmployee"
+                android:textColor="@android:color/white"
+                android:id="@+id/reference_By_Employee_Button"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

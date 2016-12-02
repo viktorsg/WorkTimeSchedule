@@ -68,14 +68,14 @@ public class RegisterEmployeeFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
+        View focus = getActivity().getCurrentFocus();
+        if (focus != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         switch (view.getId()) {
             case R.id.add_Employee_Button:
-                View focus = getActivity().getCurrentFocus();
-                if (focus != null) {
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-
                 List<String> errors = new ArrayList<>();
                 if (mUsernameEditText.getText().toString().length() == 0) {
                     errors.add("Username");

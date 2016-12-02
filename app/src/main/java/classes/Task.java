@@ -4,7 +4,12 @@ import java.util.List;
 
 public class Task {
 
-    private int Id;
+    public static final int NEW = 0;
+    public static final int STARTED = 1;
+    public static final int COMPLETED = 2;
+    public static final int CANCELED = 3;
+
+    private int ID;
     private String name;
     private String description;
     private String startDate;
@@ -13,14 +18,14 @@ public class Task {
     private List<Employee> taskEmployees;
     private int providedHours;
     private int currentHours;
-    private String state;
+    private int state;
 
     public int getId() {
-        return Id;
+        return ID;
     }
 
     public void setId(int id) {
-        Id = id;
+        ID = id;
     }
 
     public String getName() {
@@ -87,11 +92,11 @@ public class Task {
         this.currentHours = currentHours;
     }
 
-    public String getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(int state) {
         this.state = state;
     }
 }

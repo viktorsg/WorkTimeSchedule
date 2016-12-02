@@ -87,6 +87,12 @@ public class AddTaskFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        View focus = getActivity().getCurrentFocus();
+        if (focus != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         switch (view.getId()) {
             case R.id.start_Date_Text_View:
                 Calendar c = Calendar.getInstance();
@@ -120,7 +126,6 @@ public class AddTaskFragment extends Fragment implements View.OnClickListener {
 
             case R.id.leader_Text_View:
                 final Dialog custom_dialog = new Dialog(getActivity());
-                custom_dialog.setTitle("Employees");
                 custom_dialog.setContentView(R.layout.employees_dialog_layout);
                 ListView employeesListView = (ListView) custom_dialog.findViewById(R.id.employees_List_View);
                 final List<Employee> employeeList = mDb.getAllEmployees();
@@ -140,12 +145,6 @@ public class AddTaskFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.add_Task_Button:
-                View focus = getActivity().getCurrentFocus();
-                if (focus != null) {
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-
                 List<String> errors = new ArrayList<>();
                 if (mNameEditText.getText().toString().length() == 0) {
                     errors.add("Name");
@@ -171,6 +170,7 @@ public class AddTaskFragment extends Fragment implements View.OnClickListener {
                     errors.add("Leader");
                 }
 
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                 if (errors.size() == 0) {
                     Task task = new Task();
                     task.setName(mNameEditText.getText().toString());
@@ -179,10 +179,9 @@ public class AddTaskFragment extends Fragment implements View.OnClickListener {
                     task.setEndDate(mEndDateTextView.getText().toString());
                     task.setLeaderId(mSelectedEmployee.getID());
                     task.setProvidedHours(Integer.parseInt(mProvidedHoursEditText.getText().toString()));
-                    task.setState("new");
+                    task.setState(Task.NEW);
 
                     final boolean added = mDb.addTask(task);
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setTitle("Work Schedule")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
@@ -198,12 +197,7 @@ public class AddTaskFragment extends Fragment implements View.OnClickListener {
                     } else {
                         alertDialogBuilder.setMessage("Error adding task!");
                     }
-
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-
                 } else {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setTitle("Work Schedule")
                             .setMessage(TextUtils.join(", ", errors) + " can not be empty!")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -212,10 +206,9 @@ public class AddTaskFragment extends Fragment implements View.OnClickListener {
                                     dialogInterface.dismiss();
                                 }
                             });
-
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
                 }
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
 
                 break;
         }
